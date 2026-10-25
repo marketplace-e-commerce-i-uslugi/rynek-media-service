@@ -4,6 +4,32 @@ spring:
   mvc:
     problemdetails:
       enabled: true
+  datasource:
+    # Lokalnie: rynek-infra/local (docker compose). Inne środowiska ustawiają zmienne.
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/media}
+    username: ${DB_USER:media}
+    password: ${DB_PASSWORD:media}
+  jpa:
+    open-in-view: false
+    hibernate:
+      # Schemat zakłada Flyway (db/migration); Hibernate tylko sprawdza zgodność encji.
+      ddl-auto: validate
+
+rynek:
+  storage:
+    # Lokalnie: SeaweedFS z rynek-infra/local (S3 na porcie 8333, klucze z seaweedfs/s3.json).
+    endpoint: ${S3_ENDPOINT:http://localhost:8333}
+    public-endpoint: ${S3_PUBLIC_ENDPOINT:http://localhost:8333}
+    region: ${S3_REGION:us-east-1}
+    access-key: ${S3_ACCESS_KEY:rynek-media}
+    secret-key: ${S3_SECRET_KEY:rynek-media-local}
+    public-bucket: ${S3_PUBLIC_BUCKET:rynek-media-public}
+    private-bucket: ${S3_PRIVATE_BUCKET:rynek-media-private}
+    allowed-origins: ${S3_ALLOWED_ORIGINS:http://localhost:4200}
+  jwt:
+    # Klucze publiczne pobierane leniwie przy pierwszym tokenie, więc serwis startuje bez działającego identity.
+    jwk-set-uri: ${IDENTITY_SERVICE_URL:http://localhost:8081}/internal/auth/jwks
+    issuer: ${JWT_ISSUER:rynek-identity}
 
 server:
   port: ${PORT:8084}

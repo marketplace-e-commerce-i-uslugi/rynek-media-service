@@ -1,0 +1,13 @@
+{
+  "identities": [
+    {
+      "name": "media-service",
+      "credentials": [{ "accessKey": "rynek-media", "secretKey": "rynek-media-local" }],
+      "actions": ["Admin", "Read", "Write", "List", "Tagging"]
+    },
+    {
+      "name": "anonymous",
+      "actions": ["Read:rynek-media-public"]
+    }
+  ]
+}

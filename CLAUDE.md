@@ -2,7 +2,7 @@
 
 Mikroserwis platformy **Rynek**: `media-service` — zdjęcia i inne pliki
 
-Zakres, endpointy i zdarzenia są opisane w `README.md`. Na razie to szkielet: endpointy zwracają 501, DTO są puste. Nie dodawaj logiki bez wyraźnej prośby.
+Zakres, endpointy i zdarzenia są opisane w `README.md`. Wysyłka plików działa (PostgreSQL + Flyway na metadane, magazyn S3 przez AWS SDK, Spring Security Resource Server z JWKS identity). Nie dodawaj logiki bez wyraźnej prośby.
 
 ## Wspólne konwencje API (§1 dokumentu architektury)
 
@@ -35,6 +35,7 @@ Legenda kolumny **Dostęp**: `pub` = bez logowania, `user` = zalogowany, `seller
 
 ## Struktura kodu
 
-- `pl.rynek.media.api`: kontrolery REST (pełne ścieżki w adnotacjach), `api.dto`: rekordy żądań, `common.NotImplemented`: odpowiedź 501
+- `pl.rynek.media.api`: kontrolery REST (pełne ścieżki w adnotacjach), `api.dto`: rekordy żądań i odpowiedzi
+- `media`: plik, przeznaczenia z limitami, sprawdzanie zawartości; `storage`: magazyn S3 (podpisane URL-e, kubełki, CORS); `config`: security, oglądający na endpointach `pub` (`Viewer`), błędy RFC 7807 po polsku
 - Konfiguracja: `src/main/resources/application.yml`
 - Port lokalny: 8084
