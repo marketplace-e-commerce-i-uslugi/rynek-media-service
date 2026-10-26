@@ -182,6 +182,7 @@ class MediaFlowTests {
         updateAlt(owner, mediaId, "  Rower górski z przodu  ")
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.altText").value("Rower górski z przodu"));
+        mvc.perform(get("/internal/media/" + mediaId)).andExpect(jsonPath("$.altText").value("Rower górski z przodu"));
         updateAlt(owner, mediaId, "x".repeat(251)).andExpect(status().isBadRequest());
         updateAlt(owner, mediaId, "").andExpect(jsonPath("$.altText").value(nullValue()));
 

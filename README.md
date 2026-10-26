@@ -63,7 +63,7 @@ Wideo obsługuje TikTok, ale zdjęcia ofert, awatary i banery trzeba przechowywa
   `CHAT_ATTACHMENT` dodano, bo czat we frontendzie wysyła załączniki. Gdy powstanie chat-service, załącznik będą mogli oglądać także uczestnicy rozmowy.
 - **Widoczność:** niepotwierdzony plik nie istnieje dla nikogo (404). Prywatny plik oglądany przez kogoś innego niż właściciel też daje 404. Zmiana opisu i usunięcie cudzego pliku publicznego dają 403.
 - **Usunięcie** kasuje plik z magazynu i metadane. Serwis nie sprawdza, czy plik jest jeszcze używany (awatar, oferta), bo wymaga to zdarzeń z innych serwisów. Nie ma też jeszcze sprzątania wysyłek, których nikt nie potwierdził.
-- **`/internal/media/{id}`:** `{id, ownerId, purpose, contentType, url}` gotowego pliku. `url` jest pusty dla plików prywatnych. channel i catalog sprawdzają nim właściciela i przeznaczenie, zanim przypną plik do kanału lub oferty.
+- **`/internal/media/{id}`:** `{id, ownerId, purpose, contentType, url, altText}` gotowego pliku. `url` jest pusty dla plików prywatnych. channel i catalog sprawdzają nim właściciela i przeznaczenie, zanim przypną plik do kanału lub oferty. catalog kopiuje `altText` do zdjęć oferty.
 
 ## Dane i zależności
 
