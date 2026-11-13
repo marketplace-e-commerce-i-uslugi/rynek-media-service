@@ -122,6 +122,14 @@ class MediaFlowTests {
         mvc.perform(get("/internal/media/" + mediaId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.url").value(nullValue()));
+        // Inny serwis (po własnym sprawdzeniu uprawnień) dostaje podpisany adres, który oddaje plik.
+        String signed = JsonPath.read(mvc.perform(get("/internal/media/" + mediaId + "/url")).andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString(), "$.url");
+        assertThat(signed).contains("X-Amz-Signature");
+        HttpResponse<byte[]> viaSigned = fetch(signed);
+        assertThat(viaSigned.statusCode()).isEqualTo(200);
+        assertThat(viaSigned.body()).isEqualTo(PDF);
+        mvc.perform(get("/internal/media/" + UUID.randomUUID() + "/url")).andExpect(status().isNotFound());
     }
 
     @Test

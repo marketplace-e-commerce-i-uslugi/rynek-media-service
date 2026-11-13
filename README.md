@@ -45,6 +45,7 @@ Wideo obsługuje TikTok, ale zdjęcia ofert, awatary i banery trzeba przechowywa
 | PATCH | `/api/v1/media/{mediaId}` | Tekst alternatywny (`altText`) | user |
 | DELETE | `/api/v1/media/{mediaId}` | Usunięcie | user |
 | GET | `/internal/media/{mediaId}` | Właściciel, przeznaczenie i adres pliku (channel, catalog) | int |
+| GET | `/internal/media/{mediaId}/url` | Adres do obejrzenia gotowego pliku, dla prywatnego podpisany i ważny 10 minut (chat) | int |
 
 ## Zachowanie
 
@@ -60,10 +61,11 @@ Wideo obsługuje TikTok, ale zdjęcia ofert, awatary i banery trzeba przechowywa
   | `AVATAR` | JPG, PNG, WebP | 5 MB | publiczny, stały URL |
   | `KYC_DOCUMENT`, `CHAT_ATTACHMENT` | JPG, PNG, WebP, PDF | 10 MB | tylko właściciel, podpisany URL ważny 10 minut |
 
-  `CHAT_ATTACHMENT` dodano, bo czat we frontendzie wysyła załączniki. Gdy powstanie chat-service, załącznik będą mogli oglądać także uczestnicy rozmowy.
+  `CHAT_ATTACHMENT` dodano, bo czat we frontendzie wysyła załączniki. Załącznik oglądają obie strony rozmowy: chat-service sprawdza uczestnictwo i prosi o podpisany adres przez `GET /internal/media/{id}/url`, więc bezpośrednio plik nadal widzi tylko właściciel.
 - **Widoczność:** niepotwierdzony plik nie istnieje dla nikogo (404). Prywatny plik oglądany przez kogoś innego niż właściciel też daje 404. Zmiana opisu i usunięcie cudzego pliku publicznego dają 403.
 - **Usunięcie** kasuje plik z magazynu i metadane. Serwis nie sprawdza, czy plik jest jeszcze używany (awatar, oferta), bo wymaga to zdarzeń z innych serwisów. Nie ma też jeszcze sprzątania wysyłek, których nikt nie potwierdził.
 - **`/internal/media/{id}`:** `{id, ownerId, purpose, contentType, url, altText}` gotowego pliku. `url` jest pusty dla plików prywatnych. channel i catalog sprawdzają nim właściciela i przeznaczenie, zanim przypną plik do kanału lub oferty. catalog kopiuje `altText` do zdjęć oferty.
+- **`/internal/media/{id}/url`:** `{url}` gotowego pliku: stały dla publicznych, podpisany i ważny 10 minut dla prywatnych. Serwis nie sprawdza, kto pyta (to ścieżka między serwisami): uprawnienie do oglądania musi sprawdzić wołający, tak jak chat-service sprawdza uczestnictwo w rozmowie.
 
 ## Dane i zależności
 
